@@ -5,8 +5,8 @@ import com.dalo.patterns.structural_patterns.adapter.service.impl.UserServiceOld
 
 public class UserAdapter implements UserService {
     @Override
-    public void SomeNewMethod() {
+    public void someNewMethod() {
         UserServiceOldImpl userServiceOld = new UserServiceOldImpl();
-        userServiceOld.SomeOldMethod();
+        userServiceOld.someOldMethod();
     }
 }
