@@ -1,4 +1,4 @@
-package com.dalo.javafundamentals.serialization.model;
+package com.dalo.javafundamentals.iostream.model;
 
 import java.io.Serializable;
 
