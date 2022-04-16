@@ -4,13 +4,14 @@ import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 
 public class ClassLoading {
+    private static final String ABSOLUTE_PATH = "D:\\Internship\\MockModule\\target\\classes\\module\\";
+
     public static void main(String[] args) {
-        String modulePath = "Your path";
         ClassLoaderFromFile classLoader = new ClassLoaderFromFile(
-                modulePath,
+                ABSOLUTE_PATH,
                 ClassLoader.getSystemClassLoader());
 
-        File dir = new File(modulePath);
+        File dir = new File(ABSOLUTE_PATH);
         String[] modules = dir.list();
 
         if (modules != null) {

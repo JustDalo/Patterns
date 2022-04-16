@@ -15,7 +15,7 @@ public class ClassLoaderFromFile extends ClassLoader {
     public Class<?> findClass(String className) throws ClassNotFoundException {
         try {
             byte[] b = fetchClass(binPath + className + ".class");
-            return defineClass( className, b, 0, b.length);
+            return defineClass("module." + className, b, 0, b.length);
         } catch (IOException e) {
             e.printStackTrace();
             return super.findClass(className);
