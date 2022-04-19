@@ -11,16 +11,16 @@ import java.util.stream.Stream;
 
 public class Application {
     public static void main(String[] args) {
-        Modifier nameModifier = new NameModifier("Kate");
-        Modifier nameModifier1 = new NameModifier("Daniil");
+        var nameModifier = new NameModifier("Kate");
+        var nameModifier1 = new NameModifier("Daniil");
 
-        List<Modifier> modifiers = new ArrayList<>();
+        var modifiers = new ArrayList<Modifier>();
         modifiers.add(nameModifier);
         modifiers.add(nameModifier1);
 
-        Modifier compositeModifier = new CompositeModifier(modifiers);
+        var compositeModifier = new CompositeModifier(modifiers);
 
-        User user = new User("Daniil", "Shyshla");
+        var user = new User("Daniil", "Shyshla");
 
         System.out.println(compositeModifier.modifyUser(user).toString());
     }
