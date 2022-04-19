@@ -11,7 +11,6 @@ import java.util.stream.Stream;
 
 public class Application {
     public static void main(String[] args) {
-        int[] steam = Stream.of("12", "44").mapToInt(Integer::parseInt).toArray();
         Modifier nameModifier = new NameModifier("Kate");
         Modifier nameModifier1 = new NameModifier("Daniil");
 
