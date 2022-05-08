@@ -3,9 +3,9 @@ package com.dalo.spring.beanprovider.impl;
 import com.dalo.spring.beanconfiguration.BeanConfiguration;
 import com.dalo.spring.beanprovider.BeanProvider;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.Map;
 
 public class BeanProviderImpl implements BeanProvider {
@@ -14,11 +14,12 @@ public class BeanProviderImpl implements BeanProvider {
 
     public BeanProviderImpl(BeanConfiguration beanConfiguration) {
         this.beanConfiguration = beanConfiguration;
+        singletons = new HashMap<>();
     }
 
     @Override
-    public Class<?> resolve() {
-        return null;
+    public Class<?> resolve(Class<?> dependencyClass) {
+        return createBean(dependencyClass).getClass();
     }
 
     private Object createBean(Type beanType) {
@@ -35,30 +36,24 @@ public class BeanProviderImpl implements BeanProvider {
         }
 
         var resolution = createInstance(beanConfiguration.beans.get(beanType).getImplementation());
+
         return resolution;
     }
 
     private Object createInstance(Type implementationType) {
-        Constructor[] ctors = implementationType.getClass().getConstructors();
-        Constructor ctor = null;
-
-        for (int i = 0; i < ctors.length; i++) {
-            ctor = ctors[i];
-            if (ctor.getGenericParameterTypes().length == 0) {
-                break;
-            }
-        }
-
         try {
-            Object object = ctor.newInstance(new Object[] {});
-            return object;
-            // production code should handle these exceptions more gracefully
+            Class c = Class.forName(implementationType.getTypeName());
+            return c.getDeclaredConstructor().newInstance();
         } catch (InstantiationException x) {
             x.printStackTrace();
-        } catch (InvocationTargetException x) {
-            x.printStackTrace();
-        } catch (IllegalAccessException x) {
-            x.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
         }
         throw new IllegalArgumentException();
     }
