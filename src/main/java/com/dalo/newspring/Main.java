@@ -3,11 +3,18 @@ package com.dalo.newspring;
 import com.dalo.newspring.controller.CustomController;
 import com.dalo.newspring.service.Service1;
 import com.dalo.newspring.service.impl.Service1Impl;
+import com.dalo.newspring.utils.Application;
+import com.dalo.newspring.utils.ApplicationContext;
 import com.dalo.newspring.utils.ObjectFactory;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
-        CustomController controller = ObjectFactory.getInstance().createObject(CustomController.class);
+        ApplicationContext context = Application.run("com.dalo.springv2.0", new HashMap<>(Map.of(Service1.class,
+            Service1Impl.class)));
+        CustomController controller = context.getObject(CustomController.class);
         controller.test();
     }
 }
