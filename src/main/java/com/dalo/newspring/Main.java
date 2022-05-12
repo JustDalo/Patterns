@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
-        ApplicationContext context = Application.run("com.dalo.springv2.0", new HashMap<>(Map.of(Service1.class,
+        ApplicationContext context = Application.run("com.dalo.newspring", new HashMap<>(Map.of(Service1.class,
             Service1Impl.class)));
         CustomController controller = context.getObject(CustomController.class);
         controller.test();
