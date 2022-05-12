@@ -11,6 +11,7 @@ public class CustomController {
     Service2 service2;
 
     public void test() {
-
+        service1.test();
+        service2.test();
     }
 }
