@@ -1,5 +1,7 @@
 package com.dalo.newspring.utils;
 
+import com.dalo.newspring.proxy.ProxyConfigurator;
+
 import javax.annotation.PostConstruct;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -8,14 +10,31 @@ import java.util.List;
 
 public class ObjectFactory {
     private final ApplicationContext context;
-    private List<ObjectConfigurator> configurators = new ArrayList<>();
+    private List<ObjectConfigurator> objectConfigurators = new ArrayList<>();
+    private List<ProxyConfigurator> proxyConfigurators = new ArrayList<>();
 
     public ObjectFactory(ApplicationContext context) {
         this.context = context;
+
         for (Class<? extends ObjectConfigurator> aClass :
             context.getConfig().getScanner().getSubTypesOf(ObjectConfigurator.class)) {
             try {
-                configurators.add(aClass.getDeclaredConstructor().newInstance());
+                objectConfigurators.add(aClass.getDeclaredConstructor().newInstance());
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+        }
+
+        for (Class<? extends ProxyConfigurator> aClass :
+            context.getConfig().getScanner().getSubTypesOf(ProxyConfigurator.class)) {
+            try {
+                proxyConfigurators.add(aClass.getDeclaredConstructor().newInstance());
             } catch (InstantiationException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {
@@ -35,6 +54,14 @@ public class ObjectFactory {
 
         invokeInit(implClass, t);
 
+        t = wrapWithProxyIfNeeded(implClass, t);
+        return t;
+    }
+
+    private <T> T wrapWithProxyIfNeeded(Class<T> implClass, T t) {
+        for (ProxyConfigurator proxyConfigurator : proxyConfigurators) {
+            t = (T) proxyConfigurator.replaceWithProxyIfNeeded(t, implClass);
+        }
         return t;
     }
 
@@ -68,7 +95,7 @@ public class ObjectFactory {
     }
 
     private <T> void configure(T t) {
-        for (ObjectConfigurator objectConfigurator : configurators) {
+        for (ObjectConfigurator objectConfigurator : objectConfigurators) {
             objectConfigurator.configure(t, context);
         }
     }
